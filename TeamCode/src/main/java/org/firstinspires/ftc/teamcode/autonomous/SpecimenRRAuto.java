@@ -29,8 +29,8 @@ public class SpecimenRRAuto extends OpMode {
         slide = new Slide(hardwareMap);
         joint = new Joint(hardwareMap);
         basket = new Basket(hardwareMap);
-        //wrist = new Wrist(hardwareMap);
-        //claw = new Claw(hardwareMap);
+        wrist = new Wrist(hardwareMap);
+        claw = new Claw(hardwareMap);
 
         beginPose = new Pose2d(0, 54, Math.toRadians(-90));
         drive = new PinpointDrive(hardwareMap, beginPose);
