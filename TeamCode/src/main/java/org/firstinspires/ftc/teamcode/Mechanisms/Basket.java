@@ -28,7 +28,7 @@ public class Basket {
         }
     }
 
-    public Action basketToPosition(double targetPosition) {
+    public Action setTargetPosition(double targetPosition) {
         return new BasketToPosition((int) targetPosition);
     }
 }

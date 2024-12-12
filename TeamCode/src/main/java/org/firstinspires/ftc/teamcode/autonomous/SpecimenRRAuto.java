@@ -37,7 +37,7 @@ public class SpecimenRRAuto extends OpMode {
 
 
         //Sets claw to an inital position to hold specimen
-        Actions.runBlocking(claw.clawPosition(0.5));
+        Actions.runBlocking(claw.setTargetPosition(0.5));
     }
 
     @Override
@@ -46,7 +46,9 @@ public class SpecimenRRAuto extends OpMode {
 
         first = drive.actionBuilder(beginPose)
                 .lineToX(-33)
+                .stopAndAdd(claw.setTargetPosition(0.5))
                 .waitSeconds(5);
+
     }
 
     @Override
@@ -54,9 +56,11 @@ public class SpecimenRRAuto extends OpMode {
         Actions.runBlocking(
                 new SequentialAction(
                     first.build(),
-                    slide.slideToPosition(1000),
-                    basket.basketToPosition(1)
+                    slide.setTargetPosition(1000),
+                    basket.setTargetPosition(1)
                 )
         );
+
+
     }
 }

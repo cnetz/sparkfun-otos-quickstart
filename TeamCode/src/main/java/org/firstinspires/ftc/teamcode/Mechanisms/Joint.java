@@ -59,7 +59,7 @@ public class Joint {
         }
     }
 
-    public Action jointToPosition(double targetPosition) {
+    public Action setTargetPosition(double targetPosition) {
         return new Joint.JointToPosition((int) targetPosition);
     }
 }

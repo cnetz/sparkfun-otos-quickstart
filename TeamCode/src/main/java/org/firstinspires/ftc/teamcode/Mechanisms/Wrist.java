@@ -28,7 +28,7 @@ public class Wrist {
         }
     }
 
-    public Action clawPosition(double targetPosition) {
+    public Action setTargetPosition(double targetPosition) {
         return new Wrist.WristToPosition((int) targetPosition);
     }
 }

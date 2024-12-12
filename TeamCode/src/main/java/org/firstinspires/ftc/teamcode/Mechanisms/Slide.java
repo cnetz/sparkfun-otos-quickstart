@@ -60,7 +60,7 @@ public class Slide {
         }
     }
 
-    public Action slideToPosition(double targetPosition) {
+    public Action setTargetPosition(double targetPosition) {
         return new SlideToPosition((int) targetPosition);
     }
 }

@@ -28,7 +28,7 @@ public class Claw {
         }
     }
 
-    public Action clawPosition(double targetPosition) {
+    public Action setTargetPosition(double targetPosition) {
         return new Claw.ClawToPosition((int) targetPosition);
     }
 }
