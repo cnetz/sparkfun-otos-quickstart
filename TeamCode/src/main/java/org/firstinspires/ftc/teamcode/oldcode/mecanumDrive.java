@@ -242,16 +242,8 @@ public class mecanumDrive extends LinearOpMode {
             case IDLE:
                 if(gamepad2.left_stick_y != 0){
                     currentSlideState = SlideState.MANUAL;
-                } else if(gamepad2.dpad_down) {
-                    int move = (int)(Math.round(-20 * cpiSlide));
-                    slideMotor.setTargetPosition(slideMotor.getCurrentPosition() + move);
-
-                    slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                    slideMotor.setPower(0.2);
-
-                    currentSlideState = SlideState.MOVING;
                 }
+                
                 break;
 
             case MOVING:
