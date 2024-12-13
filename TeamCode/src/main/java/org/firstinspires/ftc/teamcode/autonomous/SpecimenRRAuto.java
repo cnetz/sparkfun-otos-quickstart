@@ -35,32 +35,34 @@ public class SpecimenRRAuto extends OpMode {
         beginPose = new Pose2d(0, 54, Math.toRadians(-90));
         drive = new PinpointDrive(hardwareMap, beginPose);
 
-
         //Sets claw to an inital position to hold specimen
+
         Actions.runBlocking(claw.setTargetPosition(0.5));
     }
 
     @Override
     public void init_loop() {
 
-
         first = drive.actionBuilder(beginPose)
                 .lineToX(-33)
                 .stopAndAdd(claw.setTargetPosition(0.5))
                 .waitSeconds(5);
-
     }
 
     @Override
     public void loop() {
+        slide.holdPosition();
+    }
+
+    @Override
+    public void start() {
         Actions.runBlocking(
                 new SequentialAction(
-                    first.build(),
-                    slide.setTargetPosition(1000),
-                    basket.setTargetPosition(1)
+                        first.build(),
+
+                        slide.setTargetPosition(1000),
+                        basket.setTargetPosition(1)
                 )
         );
-
-
     }
 }

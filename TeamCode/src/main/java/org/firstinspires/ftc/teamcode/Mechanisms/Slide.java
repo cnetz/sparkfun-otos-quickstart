@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -20,8 +21,9 @@ public class Slide {
 
     public Slide(HardwareMap hardwareMap) {
         slideMotor = hardwareMap.get(DcMotorEx.class, "slideMotor");
-        slideMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         controller = new PIDController(P, I, D);
@@ -58,6 +60,8 @@ public class Slide {
                 return true; // Continue moving
             }
         }
+
+
     }
 
     public Action setTargetPosition(double targetPosition) {

@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,15 +14,17 @@ public class Joint {
     private DcMotorEx jointMotor;
 
     private PIDController controller;
-    double P = 0.004, I = 0, D = 0.0002;
-    double F = 0.03;
-    double ticksInDegrees = 285 / 180;
-    int threshold = 10;
+    private double P = 0.004, I = 0, D = 0.0002;
+    private double F = 0.03;
+    private double ticksInDegrees = 285 / 180;
+    private int threshold = 10;
+    private double holdPosition = 0;
 
     public Joint(HardwareMap hardwareMap) {
         jointMotor = hardwareMap.get(DcMotorEx.class, "jointMotor");
-        jointMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        jointMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        jointMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        jointMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        jointMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         controller = new PIDController(P, I, D);
     }
@@ -52,6 +55,7 @@ public class Joint {
             telemetryPacket.put("slidePower", power);
 
             if (Math.abs(slidePos - targetPosition) < threshold) {
+                holdPosition = targetPosition;
                 return false; // Indicate action is complete
             } else {
                 return true; // Continue moving
