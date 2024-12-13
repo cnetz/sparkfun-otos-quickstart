@@ -52,6 +52,7 @@ public class SpecimenRRAuto extends OpMode {
     @Override
     public void loop() {
         slide.holdPosition();
+        joint.holdPosition();
     }
 
     @Override

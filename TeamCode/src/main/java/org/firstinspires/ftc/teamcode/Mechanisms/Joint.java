@@ -18,7 +18,7 @@ public class Joint {
     private double F = 0.03;
     private double ticksInDegrees = 285 / 180;
     private int threshold = 10;
-    private double holdPosition = 0;
+    private boolean isHolding = false;
 
     public Joint(HardwareMap hardwareMap) {
         jointMotor = hardwareMap.get(DcMotorEx.class, "jointMotor");
@@ -44,25 +44,36 @@ public class Joint {
                 initialized = true;
             }
 
-            int slidePos = jointMotor.getCurrentPosition();
-            double pid = controller.calculate(slidePos, targetPosition);
+            int currentPosition = jointMotor.getCurrentPosition();
+            double pid = controller.calculate(currentPosition, targetPosition);
             double ff = Math.cos(Math.toRadians(targetPosition / ticksInDegrees)) * F;
             double power = pid + ff; //double power = Math.max(-1.0, Math.min(1.0, pid + ff));
             jointMotor.setPower(power);
 
-            telemetryPacket.put("slidePos", slidePos);
+            telemetryPacket.put("slidePos", currentPosition);
             telemetryPacket.put("slideTarget", targetPosition);
             telemetryPacket.put("slidePower", power);
 
-            if (Math.abs(slidePos - targetPosition) < threshold) {
-                holdPosition = targetPosition;
+            if (Math.abs(currentPosition - targetPosition) < threshold) {
+                isHolding = true;
                 return false; // Indicate action is complete
             } else {
+                isHolding = false;
                 return true; // Continue moving
             }
         }
     }
 
+    // Feedforward PID Controller to counter act gravity when not moving
+    public void holdPosition() {
+        if (isHolding) {
+            int currentPosition = jointMotor.getCurrentPosition();
+            double power = Math.cos(Math.toRadians(currentPosition / ticksInDegrees)) * F;
+            jointMotor.setPower(power);
+        }
+    }
+
+    // RoadRunner Action that is called in any autonomous class to set the joint to a position
     public Action setTargetPosition(double targetPosition) {
         return new Joint.JointToPosition((int) targetPosition);
     }

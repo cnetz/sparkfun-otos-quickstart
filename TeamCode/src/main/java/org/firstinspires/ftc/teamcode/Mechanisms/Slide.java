@@ -19,6 +19,8 @@ public class Slide {
     double ticksInDegrees = 358.466 / 180;
     int threshold = 50;
 
+    private boolean isHolding = false;
+
     public Slide(HardwareMap hardwareMap) {
         slideMotor = hardwareMap.get(DcMotorEx.class, "slideMotor");
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -33,6 +35,7 @@ public class Slide {
         private final double targetPosition;
         private boolean initialized = false;
 
+
         public SlideToPosition(int target) {
             this.targetPosition = target;
         }
@@ -44,19 +47,21 @@ public class Slide {
                 initialized = true;
             }
 
-            int slidePos = slideMotor.getCurrentPosition();
-            double pid = controller.calculate(slidePos, targetPosition);
+            int currentPosition = slideMotor.getCurrentPosition();
+            double pid = controller.calculate(currentPosition, targetPosition);
             double ff = Math.cos(Math.toRadians(targetPosition / ticksInDegrees)) * F;
             double power = pid + ff; //double power = Math.max(-1.0, Math.min(1.0, pid + ff));
             slideMotor.setPower(power);
 
-            telemetryPacket.put("slidePos", slidePos);
+            telemetryPacket.put("slidePos", currentPosition);
             telemetryPacket.put("slideTarget", targetPosition);
             telemetryPacket.put("slidePower", power);
 
-            if (Math.abs(slidePos - targetPosition) < threshold) {
+            if (Math.abs(currentPosition - targetPosition) < threshold) {
+                isHolding = true;
                 return false; // Indicate action is complete
             } else {
+                isHolding = false;
                 return true; // Continue moving
             }
         }
@@ -64,6 +69,16 @@ public class Slide {
 
     }
 
+    // Feedforward PID Controller to counter act gravity when not moving
+    public void holdPosition() {
+        if (isHolding) {
+            int currentPosition = slideMotor.getCurrentPosition();
+            double power = Math.cos(Math.toRadians(currentPosition / ticksInDegrees)) * F;
+            slideMotor.setPower(power);
+        }
+    }
+
+    // RoadRunner Action that is called in any autonomous class to set the slide to a position
     public Action setTargetPosition(double targetPosition) {
         return new SlideToPosition((int) targetPosition);
     }
