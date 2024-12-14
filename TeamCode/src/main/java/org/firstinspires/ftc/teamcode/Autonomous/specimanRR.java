@@ -3,16 +3,16 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.Trajectory;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Mechanisms.Basket;
 import org.firstinspires.ftc.teamcode.Mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.Mechanisms.Joint;
@@ -31,6 +31,7 @@ public class specimanRR extends OpMode {
     private PinpointDrive drive;
     private TrajectoryActionBuilder first;
     private TrajectoryActionBuilder second;
+
     @Override
     public void init() {
         slide = new Slide(hardwareMap);
@@ -51,14 +52,21 @@ public class specimanRR extends OpMode {
     public void init_loop(){
         first = drive.actionBuilder(beginPosition)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(0,28), -90)
-                //.waitSeconds(5)
+                .splineToLinearHeading(new Pose2d(0, 28, Math.PI / 2), -90)
+                .waitSeconds(4)
+                .splineToConstantHeading(new Vector2d(-32,38),-90)
                 ;
-        second = drive.actionBuilder(beginPosition)
-                .splineTo(new Vector2d(-32,38),-Math.PI / 2 )
-                .splineToConstantHeading(new Vector2d(-38,12), -90)
-                .splineToConstantHeading(new Vector2d(-46,56),-90)
+
+//        second = drive.actionBuilder()
+//                .splineTo(new Vector2d(-32,38),-Math.PI / 2 )
+//                //.splineToConstantHeading(new Vector2d(-38,12), -90)
+//                //.splineToConstantHeading(new Vector2d(-46,56),-90)
+//                ;
+
+        second = first.endTrajectory().fresh()
+                .splineToConstantHeading(new Vector2d(-32,38),-90)
                 ;
+
 
         updateTelemetry();
     }
@@ -68,6 +76,7 @@ public class specimanRR extends OpMode {
         joint.holdingPosition();
 
         updateTelemetry();
+
     }
     @Override
     public void start() {
@@ -78,9 +87,10 @@ public class specimanRR extends OpMode {
                                 slide.setTargetPosition(3000),
                                 joint.setTargetPosition(1500),
                                 wrist.setTargetPosition(0.35)
-                        ),
-                        claw.setTargetPosition(0.55),
-                        second.build()
+                        )
+                        claw.setTargetPosition(0.55)
+                        //second.build()
+
                 )
         );
     }
