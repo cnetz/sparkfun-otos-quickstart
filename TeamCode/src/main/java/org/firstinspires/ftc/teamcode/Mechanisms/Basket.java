@@ -10,20 +10,28 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Basket {
     private Servo basket;
     public Basket(HardwareMap hardwareMap) {
+
         basket = hardwareMap.get(Servo.class,"basketServo");
+        //basket.setDirection(Servo.Direction.REVERSE);
     }
 
     public class BasketToPosition implements Action {
-        private final int targetPosition;
-        public BasketToPosition(int target) {this.targetPosition = target;}
+        private final double targetPosition;
+        public BasketToPosition(double target) {this.targetPosition = target;}
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             basket.setPosition(targetPosition);
+
+
             return false;
         }
     }
     public Action setTargetPosition(double targetPosition) {
-        return new Basket.BasketToPosition((int) targetPosition);
+        return new Basket.BasketToPosition(targetPosition);
+    }
+
+    public double getPosition() {
+        return basket.getPosition();
     }
 }

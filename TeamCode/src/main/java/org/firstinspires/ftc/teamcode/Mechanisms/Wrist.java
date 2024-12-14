@@ -10,12 +10,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Wrist {
     private Servo wrist;
     public Wrist(HardwareMap hardwareMap) {
+
         wrist = hardwareMap.get(Servo.class,"wristServo");
+        //wrist.setDirection(Servo.Direction.REVERSE);
     }
 
     public class WristToPosition implements Action {
-        private final int targetPosition;
-        public WristToPosition(int target) {this.targetPosition = target;}
+        private final double targetPosition;
+        public WristToPosition(double target) {this.targetPosition = target;}
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -24,6 +26,10 @@ public class Wrist {
         }
     }
     public Action setTargetPosition(double targetPosition) {
-        return new Wrist.WristToPosition((int) targetPosition);
+        return new Wrist.WristToPosition(targetPosition);
+    }
+
+    public double getPosition() {
+        return wrist.getPosition();
     }
 }

@@ -11,11 +11,12 @@ public class Claw {
     private Servo claw;
     public Claw(HardwareMap hardwareMap) {
         claw = hardwareMap.get(Servo.class,"clawServo");
+        //claw.setDirection(Servo.Direction.REVERSE);
     }
 
     public class ClawToPosition implements Action {
-        private final int targetPosition;
-        public ClawToPosition(int target) {this.targetPosition = target;}
+        private final double targetPosition;
+        public ClawToPosition(double target) {this.targetPosition = target;}
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -24,6 +25,10 @@ public class Claw {
         }
     }
     public Action setTargetPosition(double targetPosition) {
-        return new Claw.ClawToPosition((int) targetPosition);
+        return new Claw.ClawToPosition(targetPosition);
+    }
+
+    public double getPosition() {
+        return claw.getPosition();
     }
 }

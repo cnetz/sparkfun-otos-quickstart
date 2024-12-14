@@ -137,6 +137,9 @@ public class speciman extends OpMode {
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
         imu.initialize(new IMU.Parameters(orientationOnRobot));
+
+        clawServo.setPosition(0.85);
+
     }
 
     public void init_loop() {
@@ -151,7 +154,7 @@ public class speciman extends OpMode {
 
     @Override
     public void start() {
-        clawServo.setPosition(0.85);
+
         basketServo.setPosition(0.3);
         newTimer.reset();
     }

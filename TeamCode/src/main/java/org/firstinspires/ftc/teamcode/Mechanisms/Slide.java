@@ -20,7 +20,7 @@ public class Slide {
     int threshold = 50;
     private boolean isHolding = false;
     public Slide(HardwareMap hardwareMap){
-        slideMotor = hardwareMap.get(DcMotorEx.class,"SlideMotor");
+        slideMotor = hardwareMap.get(DcMotorEx.class,"slideMotor");
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -69,5 +69,17 @@ public class Slide {
     //roadRunner Actions that is called in any autonamous class to set the slide to a position
     public Action setTargetPosition(double targetPositoin){
         return new SlideToPosition((int) targetPositoin);
+    }
+
+    public double getCurrentPosition() {
+        return slideMotor.getCurrentPosition();
+    }
+
+    public double getTargetPosition() {
+        return slideMotor.getTargetPosition();
+    }
+
+    public double getPower() {
+        return slideMotor.getPower();
     }
 }

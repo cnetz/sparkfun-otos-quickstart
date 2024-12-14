@@ -16,7 +16,7 @@ public class Joint {
     double p = 0.004, i = 0, d = 0.0002;
     double f = 0.03;
     double ticksInDegrees = 285 / 180;
-    int threshold = 10;
+    int threshold = 5;
     private boolean isHolding = false;
     public Joint(HardwareMap hardwareMap){
         jointMotor = hardwareMap.get(DcMotorEx.class,"jointMotor");
@@ -67,5 +67,17 @@ public class Joint {
     //roadRunner Actions that is called in any autonamous class to set the slide to a position
     public Action setTargetPosition(double targetPosition){
         return new JointToPosition((int) targetPosition);
+    }
+
+    public double getCurrentPosition() {
+        return jointMotor.getCurrentPosition();
+    }
+
+    public double getTargetPosition() {
+        return jointMotor.getTargetPosition();
+    }
+
+    public double getPower() {
+        return jointMotor.getPower();
     }
 }
