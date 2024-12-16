@@ -69,7 +69,6 @@ public class specimanRR extends OpMode {
 
 
         updateTelemetry();
-        test = drive.pose.position.x;
 
     }
     @Override
