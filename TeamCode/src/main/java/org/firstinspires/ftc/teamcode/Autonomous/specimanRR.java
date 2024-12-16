@@ -69,6 +69,8 @@ public class specimanRR extends OpMode {
 
 
         updateTelemetry();
+        test = drive.pose.position.x;
+
     }
     @Override
     public void loop(){
@@ -87,7 +89,7 @@ public class specimanRR extends OpMode {
                                 slide.setTargetPosition(3000),
                                 joint.setTargetPosition(1500),
                                 wrist.setTargetPosition(0.35)
-                        )
+                        ),
                         claw.setTargetPosition(0.55)
                         //second.build()
 
@@ -101,6 +103,9 @@ public class specimanRR extends OpMode {
         telemetry.addData("Claw Position", claw.getPosition());
         telemetry.addData("Joint Position", joint.getCurrentPosition());
         telemetry.addData("Slide Position", slide.getCurrentPosition());
+        telemetry.addData("X Position", drive.pose.position.x);
+        telemetry.addData("Y Position", drive.pose.position.y);
+        telemetry.addData("Heading", drive.pose.heading);
         telemetry.update();
     }
 }
